@@ -1,0 +1,78 @@
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main, master]
+
+jobs:
+  static:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@1.96.0
+      - name: Validate scripts and benchmark
+        run: |
+          python3 -m py_compile scripts/stack.py
+          bash -n scripts/*.sh ci/*.sh bench/run.sh
+          cargo fmt --all --check
+          cargo clippy --workspace --all-targets -- -D warnings
+          cargo test --workspace
+
+  pull-request-stack:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {pg: pg14, suite: compatibility}
+          - {pg: pg16, suite: workflows}
+          - {pg: pg18, suite: full}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run stack validation
+        run: scripts/docker-test.sh '${{ matrix.pg }}' '${{ matrix.suite }}' git
+      - name: Run representative installation orders
+        if: matrix.pg == 'pg18'
+        run: |
+          scripts/compose.sh -f docker/docker-compose.yml exec -T postgres-pg18 env \
+            DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres \
+            /workspace/pg-financial-stack/scripts/run-install-orders.sh pg18
+      - name: Record locked versions
+        if: always()
+        run: mkdir -p artifacts && cp stack/versions.lock artifacts/
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: stack-${{ matrix.pg }}-${{ matrix.suite }}
+          path: |
+            artifacts/
+            stack/versions.lock
+
+  main-stack:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        pg: [pg14, pg15, pg16, pg17, pg18]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run full stack validation
+        run: scripts/docker-test.sh '${{ matrix.pg }}' full git
+      - name: Run representative installation orders
+        if: matrix.pg == 'pg18'
+        run: |
+          scripts/compose.sh -f docker/docker-compose.yml exec -T postgres-pg18 env \
+            DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres \
+            /workspace/pg-financial-stack/scripts/run-install-orders.sh pg18
+      - name: Record locked versions
+        if: always()
+        run: mkdir -p artifacts && cp stack/versions.lock artifacts/
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: main-stack-${{ matrix.pg }}
+          path: |
+            artifacts/
+            stack/versions.lock

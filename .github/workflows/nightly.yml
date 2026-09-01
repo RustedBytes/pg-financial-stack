@@ -1,0 +1,32 @@
+name: Nightly
+on:
+  schedule:
+    - cron: '17 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  matrix:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        pg: [pg14, pg15, pg16, pg17, pg18]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run nightly stack validation
+        run: |
+          if [[ '${{ matrix.pg }}' == 'pg18' ]]; then
+            export PG_STACK_CONCURRENCY=128
+          fi
+          scripts/docker-test.sh '${{ matrix.pg }}' full git
+      - name: Run representative installation orders
+        if: matrix.pg == 'pg18'
+        run: |
+          scripts/compose.sh -f docker/docker-compose.yml exec -T postgres-pg18 env \
+            DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres \
+            /workspace/pg-financial-stack/scripts/run-install-orders.sh pg18
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nightly-${{ matrix.pg }}
+          path: stack/versions.lock

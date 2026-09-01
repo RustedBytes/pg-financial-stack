@@ -1,0 +1,11 @@
+name: Upgrade
+on:
+  workflow_dispatch:
+
+jobs:
+  upgrade:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Require explicit old and new artifact inputs
+        run: ci/upgrades.sh pg18

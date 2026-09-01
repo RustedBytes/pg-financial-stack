@@ -1,0 +1,7 @@
+FROM postgres:15-bookworm
+ARG RUST_VERSION=1.96.0
+ARG PGRX_VERSION=0.19.2
+RUN apt-get update && apt-get install -y --no-install-recommends build-essential ca-certificates clang curl git libclang-dev pkg-config python3 postgresql-server-dev-15 && rm -rf /var/lib/apt/lists/*
+ENV PATH=/root/.cargo/bin:$PATH
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain ${RUST_VERSION} && cargo install cargo-pgrx --version ${PGRX_VERSION} --locked
+WORKDIR /workspace/pg-financial-stack

@@ -1,0 +1,8 @@
+/target/
+/bench/target/
+/.stack/
+/artifacts/
+*.log
+*.lock.tmp
+__pycache__/
+*.pyc

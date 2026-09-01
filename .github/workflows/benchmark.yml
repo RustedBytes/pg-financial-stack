@@ -1,0 +1,24 @@
+name: Benchmark
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '43 3 * * 0'
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: scripts/docker-test.sh pg18 full git
+      - name: Run benchmark workloads
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5418/financial_stack
+        run: |
+          mkdir -p artifacts
+          for workload in ledger_transfer fx_quote_create reconcile_external_ingest risk_amount_check full_exchange; do
+            bench/run.sh --workload "$workload" --clients 16 --iterations 100 > "artifacts/$workload.json"
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-pg18
+          path: artifacts/

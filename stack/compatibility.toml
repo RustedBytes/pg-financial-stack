@@ -1,0 +1,22 @@
+schema_version = 1
+
+[[compatible]]
+name = "stack-v0.1"
+postgres = ">=14,<=18"
+pgrx = "=0.19.2"
+rust = ">=1.96"
+pg_money = ">=0.1,<0.4"
+pg_cryptocurrency = ">=0.1,<0.3"
+pg_fx = ">=0.1,<0.2"
+pg_ledger = ">=0.1,<0.2"
+pg_reconcile = ">=0.1,<0.2"
+pg_risk = ">=0.1,<0.2"
+
+[installation_orders]
+supported = [
+  ["pg_money", "pg_cryptocurrency", "pg_fx", "pg_ledger", "pg_reconcile", "pg_risk"],
+  ["pg_ledger", "pg_money", "pg_cryptocurrency", "pg_fx", "pg_reconcile", "pg_risk"],
+  ["pg_fx", "pg_ledger", "pg_risk", "pg_reconcile", "pg_money", "pg_cryptocurrency"],
+  ["pg_cryptocurrency", "pg_money", "pg_ledger", "pg_reconcile", "pg_fx", "pg_risk"],
+  ["pg_risk", "pg_reconcile", "pg_ledger", "pg_fx", "pg_money", "pg_cryptocurrency"],
+]

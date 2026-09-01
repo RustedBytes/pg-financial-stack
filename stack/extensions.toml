@@ -1,0 +1,35 @@
+[stack]
+version = "0.1.0"
+pgrx_version = "0.19.2"
+rust_version = "1.96"
+postgres_versions = [14, 15, 16, 17, 18]
+
+[extensions.pg_money]
+repo = "https://github.com/RustedBytes/pg-money"
+branch = "master"
+required = true
+
+[extensions.pg_cryptocurrency]
+repo = "https://github.com/RustedBytes/pg-cryptocurrency"
+branch = "master"
+required = true
+
+[extensions.pg_fx]
+repo = "https://github.com/RustedBytes/pg-fx"
+branch = "main"
+required = true
+
+[extensions.pg_ledger]
+repo = "https://github.com/RustedBytes/pg-ledger"
+branch = "master"
+required = true
+
+[extensions.pg_reconcile]
+repo = "https://github.com/RustedBytes/pg-reconcile"
+branch = "master"
+required = true
+
+[extensions.pg_risk]
+repo = "https://github.com/RustedBytes/pg-risk"
+branch = "master"
+required = true

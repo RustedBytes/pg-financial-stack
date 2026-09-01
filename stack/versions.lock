@@ -1,0 +1,47 @@
+# Generated; do not edit. Re-run `just resolve`.
+[stack]
+version = "0.1.0"
+generated_at = "2026-09-01T09:55:07.399162+00:00"
+generated = true
+
+[pg_money]
+commit = "4dfa040a59ef4d53eebd274749ada42ee184be29"
+version = "0.3.0"
+path = ".stack/extensions/pg_money"
+pgrx = "=0.19.2"
+postgres = [14, 15, 16, 17, 18]
+
+[pg_cryptocurrency]
+commit = "308046c977bbd3674adce767890a2d3d6f346dbd"
+version = "0.2.0"
+path = ".stack/extensions/pg_cryptocurrency"
+pgrx = "=0.19.2"
+postgres = [14, 15, 16, 17, 18]
+
+[pg_fx]
+commit = "46d76607ae9a35d4742990d75f48b332132f14fb"
+version = "0.1.0"
+path = ".stack/extensions/pg_fx"
+pgrx = "=0.19.2"
+postgres = [14, 15, 16, 17, 18]
+
+[pg_ledger]
+commit = "282786690975d5c61910534396f8fd306561bef0"
+version = "0.1.1"
+path = ".stack/extensions/pg_ledger"
+pgrx = "=0.19.2"
+postgres = [14, 15, 16, 17, 18]
+
+[pg_reconcile]
+commit = "7a9dfb4cc4ee82193a627e12ae1c04cf5eb067aa"
+version = "0.1.0"
+path = ".stack/extensions/pg_reconcile"
+pgrx = "=0.19.2"
+postgres = [14, 15, 16, 17, 18]
+
+[pg_risk]
+commit = "858651c9c28f5c212ae4a8d5cb5e9138a106f8a0"
+version = "0.1.0"
+path = ".stack/extensions/pg_risk"
+pgrx = "=0.19.2"
+postgres = [14, 15, 16, 17, 18]
